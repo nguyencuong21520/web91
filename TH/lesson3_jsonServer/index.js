@@ -195,6 +195,26 @@ app.put("/orders/:id", async (req, res) => {
   }
 });
 
+//Bài 9: DELETE /customers/:id
+app.delete("/customers/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const customerFound = await axios.get(`${BASE_URL}/customers/${id}`);
+  const customer = customerFound.data;
+
+  if (!customer) {
+    return res.status(404).send({ message: "Customer not found", data: null });
+  }
+
+  const updatedCustomer = await axios.delete(`${BASE_URL}/customers/${id}`);
+  const data = updatedCustomer.data;
+
+  if (data) {
+    return res.status(200).send({ message: "Customer deleted", data: data });
+  }
+  return res.status(404).send({ message: "Customer not found", data: null });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
