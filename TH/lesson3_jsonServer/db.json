@@ -128,8 +128,8 @@
       "id": "o001",
       "customerId": "c001",
       "productId": "p002",
-      "quantity": 1,
-      "totalPrice": 15000000
+      "quantity": 2,
+      "totalPrice": 30000000
     },
     {
       "id": "o002",

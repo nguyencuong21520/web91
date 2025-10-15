@@ -33,17 +33,28 @@ app.get("/customers", async (req, res) => {
 });
 
 // Bài 2: GET /customers/:customerId
-app.get("/customers/:id", (req, res) => {
-  const { id } = req.params;
-  const customer = customers.find((c) => c.id === id);
+app.get("/customers/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      throw new Error("Id is required");
+    }
 
-  if (customer) {
-    return res.status(200).send({
-      data: customer,
-      message: "Customer found",
-    });
+    const customer = await axios.get(`${BASE_URL}/customers/${id}`);
+    const data = customer.data;
+
+    if (data) {
+      return res.status(200).send({
+        data: data,
+        message: "Customer found",
+      });
+    }
+    return res.status(404).send({ message: "Customer not found", data: null });
+  } catch (error) {
+    return res
+      .status(500)
+      .send({ message: "Error getting customer", error: error.message });
   }
-  return res.status(404).send({ message: "Customer not found", data: null });
 });
 
 // Bài 3: GET /customers/:customerId/orders
@@ -135,6 +146,53 @@ app.post("/orders", (req, res) => {
   };
   orders.push(newOrder);
   return res.status(201).send({ message: "Order created", data: newOrder });
+});
+
+// Bài 8: PUT /orders/:orderId
+
+app.put("/orders/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { quantity } = req.body;
+
+    const orderFound = await axios.get(`${BASE_URL}/orders/${id}`);
+    const order = orderFound.data;
+
+    if (!order) {
+      throw new Error("Order not found");
+    }
+
+    const productId = order.productId;
+
+    const productFound = await axios.get(`${BASE_URL}/products/${productId}`);
+    const product = productFound.data;
+
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    if (product.quantity < quantity) {
+      throw new Error("Product quantity not enough");
+    }
+
+    const newOrder = {
+      ...order,
+      quantity,
+      totalPrice: product.price * quantity,
+    };
+
+    const updatedOrder = await axios.put(`${BASE_URL}/orders/${id}`, newOrder);
+    const data = updatedOrder.data;
+
+    if (data) {
+      return res.status(200).send({ message: "Order updated", data: data });
+    }
+    return res.status(404).send({ message: "Order not found", data: null });
+  } catch (error) {
+    return res
+      .status(500)
+      .send({ message: "Error updating order", error: error.message });
+  }
 });
 
 app.listen(PORT, () => {
