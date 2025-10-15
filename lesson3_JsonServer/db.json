@@ -1,0 +1,52 @@
+{
+  "users": [
+    {
+      "id": "US001",
+      "userName": "MindX"
+    },
+    {
+      "id": "US002",
+      "useName": "Nobi Nobita"
+    },
+    {
+      "id": "US003",
+      "userName": "Shizuka"
+    },
+    {
+      "id": "US004",
+      "userName": "DO ND"
+    }
+  ],
+  "posts": [
+    {
+      "id": "PS001",
+      "content": "Nội dung học về JSON Server!",
+      "authorId": "US001"
+    }
+  ],
+  "comments": [
+    {
+      "id": "CMT001",
+      "postId": "PS001",
+      "content": "Bài học này rất ý nghĩa! Cảm ơn MindX!",
+      "authorId": "US002"
+    }
+  ],
+  "categories": [
+    {
+      "id": "CT001",
+      "name": "Category 1"
+    },
+    {
+      "id": "CT002",
+      "name": "Category 2"
+    }
+  ],
+  "products": [
+    {
+      "id": "PR001",
+      "name": "Product 1",
+      "categoryId": "CT001"
+    }
+  ]
+}
