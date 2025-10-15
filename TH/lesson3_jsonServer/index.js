@@ -1,7 +1,10 @@
 import express from "express";
+import axios from "axios";
 import { customers, orders, products } from "./data.js";
 
 const PORT = 3002;
+const BASE_URL = "http://localhost:3000";
+
 const app = express();
 app.use(express.json());
 
@@ -10,11 +13,23 @@ app.get("/", (req, res) => {
 });
 
 // Bài 1: GET /customers
-app.get("/customers", (req, res) => {
-  res.status(200).send({
-    data: customers,
-    message: "Customers list",
-  });
+app.get("/customers", async (req, res) => {
+  try {
+    const customers = await axios.get(`${BASE_URL}/customers`);
+    const data = customers.data;
+
+    if (data.length > 0) {
+      return res.status(200).send({
+        data: data,
+        message: "Customers list",
+      });
+    }
+    return res.status(404).send({ message: "Customers not found", data: [] });
+  } catch (error) {
+    return res
+      .status(500)
+      .send({ message: "Error getting customers", error: error.message });
+  }
 });
 
 // Bài 2: GET /customers/:customerId
