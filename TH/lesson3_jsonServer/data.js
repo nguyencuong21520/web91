@@ -61,6 +61,13 @@ const customers = [
   },
 ];
 
+const users = [
+  {
+    userName: "Nguyễn Văn A",
+    email: "nguyenvana@example.com",
+  },
+];
+
 const products = [
   {
     id: "p001",
