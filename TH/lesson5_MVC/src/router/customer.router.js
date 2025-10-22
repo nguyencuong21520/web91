@@ -1,9 +1,15 @@
 import { Router } from "express";
+import { customerController } from "../controller/index.js";
+import validationMiddleware from "../middleware/validation.middleware.js";
+import checkExistMiddleware from "../middleware/checkExist.middleware.js";
 
 const customerRouter = Router();
 
-customerRouter.get("/", (req, res) => {
-  res.send("Hello from customer router");
-});
+customerRouter.post(
+  "/",
+  validationMiddleware.validateCustomerBody,
+  checkExistMiddleware.checkExistEmailFromCustomer,
+  customerController.createCustomer
+);
 
 export default customerRouter;
