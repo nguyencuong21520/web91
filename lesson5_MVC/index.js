@@ -1,8 +1,10 @@
 import express from "express";
-import mongoose from "mongoose";
 import connectMongo from "./src/config/connectMongo.config.js";
+import router from "./src/router/index.js";
 
 const app = express();
+
+app.use(express.json());
 
 connectMongo();
 
@@ -10,11 +12,7 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.post("/users", userController.createUser);
-app.get("/users", userController.getAllUsers);
-app.get("/users/:id", userController.getUserById);
-app.put("/users/:id", userController.updateUser);
-app.delete("/users/:id", userController.deleteUser);
+app.use("/api/v1", router);
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
