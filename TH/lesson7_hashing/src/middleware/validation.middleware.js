@@ -1,27 +1,20 @@
-const validationMiddleware = {
-  validateOrderBody: (req, res, next) => {
-    const { customerId, productId, quantity } = req.body;
-    if (!customerId || !productId || !quantity) {
-      return res
-        .status(400)
-        .send("Customer ID, product ID and quantity are required");
-    }
+const validationMiddleware = (schema) => async (req, res, next) => {
+  try {
+    const value = await schema.validate(req.body, {
+      abortEarly: false,
+      stripUnknown: true,
+    });
+    req.body = value;
     next();
-  },
-  validateOrderUpdateBody: (req, res, next) => {
-    const { quantity } = req.body;
-    if (!quantity || quantity <= 0) {
-      return res.status(400).send("Quantity is required");
-    }
-    next();
-  },
-  validateCustomerBody: (req, res, next) => {
-    const { name, email, age } = req.body;
-    if (!name || !email || !age) {
-      return res.status(400).send("Name, email and age are required");
-    }
-    next();
-  },
+  } catch (err) {
+    return res
+      .status(400)
+      .send(
+        Array.isArray(err?.errors)
+          ? err.errors.join(", ")
+          : "Invalid request body"
+      );
+  }
 };
 
 export default validationMiddleware;
