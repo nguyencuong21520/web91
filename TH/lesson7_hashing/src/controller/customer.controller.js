@@ -36,6 +36,12 @@ const customerController = {
   },
   getAllCustomers: async (req, res) => {
     try {
+      const user = req.user;
+      console.log("🚀 ~ user:", user);
+
+      if (user.role !== "admin") {
+        return res.status(403).send({ message: "Dont have permission" });
+      }
       const customers = await CustomersModel.find();
 
       if (customers.length <= 0) {

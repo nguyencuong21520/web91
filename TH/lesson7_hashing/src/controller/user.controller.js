@@ -1,4 +1,5 @@
 import { UserModel } from "../model/index.js";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 const userController = {
@@ -53,13 +54,28 @@ const userController = {
       return res.status(401).send("Invalid email or password");
     }
 
+    //create secret key
+    const secretKey = process.env.SECRET_KEY;
+
+    //data info in token
+    const payload = {
+      userId: user._id,
+      email: user.email,
+      fullName: user.fullName,
+      role: user.role,
+      type: "AT",
+    };
+
+    const token = jwt.sign(payload, secretKey, { expiresIn: "1h" });
+
     //generate token
-
-    const token = `${process.env.SECRET_KEY}-${email}-${
+    const fakeToken = `${secretKey}-${user._id}-${user.email}-${
       user.fullName
-    }-${Math.random().toString(36).substring(2, 15)}`;
+    }-${user.role}-${Math.random().toString(36).substring(2, 15)}`;
 
-    res.status(200).send({ message: "User logged in successfully", token });
+    res
+      .status(200)
+      .send({ message: "User logged in successfully", token, fakeToken });
   },
 };
 
