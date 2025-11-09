@@ -5,7 +5,7 @@ const employeeSchema = new mongoose.Schema(
     name: String,
     email: String,
     phone: String,
-    apartment: String,
+    department: String,
     accountId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Account",

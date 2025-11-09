@@ -23,4 +23,5 @@ accountRouter.get(
   authMiddleware.authenticate,
   accountController.getProfile
 );
+
 export default accountRouter;
